@@ -7,8 +7,10 @@ set -e
 echo "» pre-push: building contracts (wasm32)…"
 cargo build --target wasm32-unknown-unknown --release -p soroban-explorer-contract
 
+# Proptest runs 8 cases per property here instead of 20-256 (a full run takes
+# ~15 min in a codespace). CI does not set PROPTEST_CASES and runs full counts.
 echo "» pre-push: running explorer contract tests…"
-cargo test -p soroban-explorer-contract
+PROPTEST_CASES=8 cargo test -p soroban-explorer-contract
 
 echo "» pre-push: running ticket contract tests…"
 (cd contracts/ticket && cargo test --features testutils --release)

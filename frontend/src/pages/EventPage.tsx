@@ -9,7 +9,7 @@ import RestoreFootprintPanel from "../components/RestoreFootprintPanel";
 import HeuristicParams from "../components/HeuristicParams";
 import ZkCostDelta from "../components/ZkCostDelta";
 import FactoryDeploymentTree from "../components/FactoryDeploymentTree";
-import { useTranslation } from "../i18n";
+import { useTranslation } from "../i18nProvider";
 import ProvenancePanel from "../components/ProvenancePanel";
 
 export default function EventPage() {
@@ -30,14 +30,15 @@ export default function EventPage() {
   });
 
   if (isLoading) return <p style={{ color: "var(--muted)" }}>{t("app.loading")}</p>;
-  if (!ev) return (
-    <div style={{ textAlign: "center", marginTop: "2rem" }}>
-      <p>{t("event.notFound")}</p>
-      <Link to="/" style={{ color: "var(--primary)", textDecoration: "underline" }}>
-        {t("event.back")}
-      </Link>
-    </div>
-  );
+  if (!ev)
+    return (
+      <div style={{ textAlign: "center", marginTop: "2rem" }}>
+        <p>{t("event.notFound")}</p>
+        <Link to="/" style={{ color: "var(--primary)", textDecoration: "underline" }}>
+          {t("event.back")}
+        </Link>
+      </div>
+    );
 
   const isReorg = Boolean((ev as any).is_reorg || (ev as any).superseded);
 
@@ -125,7 +126,11 @@ export default function EventPage() {
             label="Decode trust"
             value={
               <span title={ev.decode_warnings?.join(", ")}>
-                {ev.decode_status === "verified" ? "Verified against registered ABI" : ev.decode_status === "heuristic" ? "Heuristic — no matching ABI" : "Unverified — ABI shape mismatch"}
+                {ev.decode_status === "verified"
+                  ? "Verified against registered ABI"
+                  : ev.decode_status === "heuristic"
+                    ? "Heuristic — no matching ABI"
+                    : "Unverified — ABI shape mismatch"}
               </span>
             }
           />
@@ -159,11 +164,11 @@ export default function EventPage() {
                   fontSize: 12,
                   color: ev.sac_side_effect === "account_created" ? "#34d399" : "#60a5fa",
                 }}
-                title={ev.sac_side_effect === "account_created" ? t("event.sacCreatedTitle") : t("event.sacTrustlineTitle")}
+                title={
+                  ev.sac_side_effect === "account_created" ? t("event.sacCreatedTitle") : t("event.sacTrustlineTitle")
+                }
               >
-                {ev.sac_side_effect === "account_created"
-                  ? t("event.sacCreated")
-                  : t("event.sacTrustline")}
+                {ev.sac_side_effect === "account_created" ? t("event.sacCreated") : t("event.sacTrustline")}
               </span>
             }
           />

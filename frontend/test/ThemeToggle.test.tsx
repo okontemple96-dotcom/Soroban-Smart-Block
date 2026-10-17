@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import ThemeToggle from "../src/components/ThemeToggle";
-import { I18nProvider, useTranslation } from "../src/i18n";
+import { I18nProvider, useTranslation } from "../src/i18nProvider";
 
 function LocaleProbe() {
   const { setLocale, t } = useTranslation();

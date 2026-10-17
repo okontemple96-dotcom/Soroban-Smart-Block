@@ -6,7 +6,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { api, type DailyEventCount } from "../api";
-import { useTranslation } from "../i18n";
+import { useTranslation } from "../i18nProvider";
 
 /** Selectable trailing-day presets for the event-volume trend (#799). */
 export type StatsRange = 30 | 90 | 365;
@@ -74,7 +74,10 @@ function Bars({ bars, ariaLabel }: { bars: Bar[]; ariaLabel: string }) {
             fill="var(--accent, #58a6ff)"
             rx={1}
             role="img"
-            aria-label={t(b.count === 1 ? "chart.dataPointOne" : "chart.dataPointMany", { label: b.label, count: b.count })}
+            aria-label={t(b.count === 1 ? "chart.dataPointOne" : "chart.dataPointMany", {
+              label: b.label,
+              count: b.count,
+            })}
           >
             <title>
               {t(b.count === 1 ? "chart.dataPointOne" : "chart.dataPointMany", { label: b.label, count: b.count })}
@@ -86,13 +89,7 @@ function Bars({ bars, ariaLabel }: { bars: Bar[]; ariaLabel: string }) {
   );
 }
 
-function RangeSelector({
-  range,
-  onRangeChange,
-}: {
-  range: StatsRange;
-  onRangeChange: (range: StatsRange) => void;
-}) {
+function RangeSelector({ range, onRangeChange }: { range: StatsRange; onRangeChange: (range: StatsRange) => void }) {
   const { t } = useTranslation();
   return (
     <div role="group" aria-label={t("chart.rangeLabel")} style={{ display: "flex", gap: 6 }}>
@@ -174,10 +171,7 @@ export default function InvocationFrequencyChart({
       </div>
       {hasActivity ? (
         <>
-          <Bars
-            bars={bars}
-            ariaLabel={t("chart.frequencyLabel", { range })}
-          />
+          <Bars bars={bars} ariaLabel={t("chart.frequencyLabel", { range })} />
           <div
             style={{
               display: "flex",
@@ -195,7 +189,10 @@ export default function InvocationFrequencyChart({
             <ul style={{ margin: "6px 0 0 20px", color: "var(--muted)" }}>
               {bars.map((bar, index) => (
                 <li key={`${bar.label}-${index}`}>
-                  {t(bar.count === 1 ? "chart.dataPointOne" : "chart.dataPointMany", { label: bar.label, count: bar.count })}
+                  {t(bar.count === 1 ? "chart.dataPointOne" : "chart.dataPointMany", {
+                    label: bar.label,
+                    count: bar.count,
+                  })}
                 </li>
               ))}
             </ul>

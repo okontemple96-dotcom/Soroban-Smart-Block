@@ -1,9 +1,8 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import Nav from "./components/Nav";
 import ErrorBoundary from "./components/ErrorBoundary";
-import { useTranslation } from "./i18n";
+import { useTranslation } from "./i18nProvider";
 
 const Home = lazy(() => import("./pages/Home"));
 const RegistryPage = lazy(() => import("./pages/RegistryPage"));
@@ -36,6 +35,7 @@ const AdminJobsPage = lazy(() => import("./pages/AdminJobsPage"));
 const AdminModerationPage = lazy(() => import("./pages/AdminModerationPage"));
 const NetworkDashboard = lazy(() => import("./pages/NetworkDashboard"));
 const TokenPage = lazy(() => import("./pages/TokenPage"));
+const WatchlistPage = lazy(() => import("./pages/WatchlistPage"));
 
 function Fallback() {
   const { t } = useTranslation();
@@ -55,15 +55,36 @@ export default function App() {
             {/* Issue #524: registration success page */}
             <Route path="/contracts/register/success" element={<RegistrationSuccessPage />} />
             <Route path="/contract/:id" element={<ContractPage />} />
-            <Route path="/contract/:id/workspace" element={<ClientOnly><DeveloperWorkspace /></ClientOnly>} />
+            <Route
+              path="/contract/:id/workspace"
+              element={
+                <ClientOnly>
+                  <DeveloperWorkspace />
+                </ClientOnly>
+              }
+            />
             {/* Issue #521: ABI diff view */}
             <Route path="/contract/:id/abi-diff" element={<AbiDiffPage />} />
-            <Route path="/wallet/:address" element={<ClientOnly><WalletPage /></ClientOnly>} />
+            <Route
+              path="/wallet/:address"
+              element={
+                <ClientOnly>
+                  <WalletPage />
+                </ClientOnly>
+              }
+            />
             <Route path="/event/:seq" element={<EventPage />} />
             <Route path="/tx/:hash" element={<TransactionPage />} />
             <Route path="/ledger/:seq" element={<LedgerPage />} />
             <Route path="/search" element={<SearchPage />} />
-            <Route path="/xdr" element={<ClientOnly><XdrInspector /></ClientOnly>} />
+            <Route
+              path="/xdr"
+              element={
+                <ClientOnly>
+                  <XdrInspector />
+                </ClientOnly>
+              }
+            />
             <Route path="/rpc-metrics" element={<RpcMetricsDashboard />} />
             <Route path="/graph" element={<GraphPage />} />
             <Route path="/sandbox" element={<Sandbox />} />

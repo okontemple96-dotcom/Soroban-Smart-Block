@@ -4,7 +4,8 @@ const english = {
   "app.loading": "Loading…",
   "contract.sections": "Contract sections",
   "contract.unregistered": "Unregistered contract",
-  "contract.noAbiDescription": "This contract has no registered ABI. Upload a local spec file to inspect its transaction logs; the file stays in your browser session only.",
+  "contract.noAbiDescription":
+    "This contract has no registered ABI. Upload a local spec file to inspect its transaction logs; the file stays in your browser session only.",
   "contract.recentEvents": "Recent Events",
   "nav.main": "Main navigation",
   "nav.brand": "Soroban Explorer",
@@ -79,7 +80,8 @@ const spanish: Record<TranslationKey, string> = {
   "app.loading": "Cargando…",
   "contract.sections": "Secciones del contrato",
   "contract.unregistered": "Contrato no registrado",
-  "contract.noAbiDescription": "Este contrato no tiene una ABI registrada. Sube un archivo de especificación local para inspeccionar sus registros de transacciones; el archivo solo permanece en esta sesión del navegador.",
+  "contract.noAbiDescription":
+    "Este contrato no tiene una ABI registrada. Sube un archivo de especificación local para inspeccionar sus registros de transacciones; el archivo solo permanece en esta sesión del navegador.",
   "contract.recentEvents": "Eventos recientes",
   "nav.main": "Navegación principal",
   "nav.brand": "Explorador Soroban",
@@ -119,7 +121,8 @@ const spanish: Record<TranslationKey, string> = {
   "event.complianceTitle": "Intervención obligatoria de la autoridad",
   "event.sacSideEffect": "Efecto secundario de SAC",
   "event.sacCreatedTitle": "SAC creó implícitamente una nueva cuenta de Stellar para este destinatario",
-  "event.sacTrustlineTitle": "SAC abrió implícitamente una línea de confianza para este activo en la cuenta destinataria",
+  "event.sacTrustlineTitle":
+    "SAC abrió implícitamente una línea de confianza para este activo en la cuenta destinataria",
   "event.sacCreated": "⬡ Entrada de cuenta creada automáticamente por SAC",
   "event.sacTrustline": "⬡ Línea de confianza nativa de SAC abierta",
   "event.ledger": "Libro mayor",
@@ -190,9 +193,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 }
 
 export function useTranslation() {
-  return useContext(I18nContext) ?? {
-    locale: "en" as const,
-    setLocale: () => {},
-    t: (key: TranslationKey, values?: TranslationValues) => translate("en", key, values),
-  };
+  return (
+    useContext(I18nContext) ?? {
+      locale: "en" as const,
+      setLocale: () => {},
+      t: (key: TranslationKey, values?: TranslationValues) => translate("en", key, values),
+    }
+  );
 }
