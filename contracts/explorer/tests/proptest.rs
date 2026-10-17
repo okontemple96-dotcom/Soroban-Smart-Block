@@ -9,6 +9,16 @@ use std::panic::{catch_unwind, AssertUnwindSafe};
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+/// Case count for a proptest block. `PROPTEST_CASES` overrides the per-block
+/// default so the pre-push hook can run a quick pass; CI leaves it unset and
+/// runs the full counts.
+fn cases(default: u32) -> u32 {
+    std::env::var("PROPTEST_CASES")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(default)
+}
+
 fn sdk_symbol(env: &Env, s: &str) -> Symbol {
     Symbol::new(env, s)
 }
@@ -65,7 +75,7 @@ proptest! {
     // 20 cases is enough to catch regressions. Each case can allocate up to
     // MAX_FUNCTIONS × MAX_PARAMS_PER_FUNCTION Soroban objects in debug builds,
     // so a large case count adds significant overhead.
-    #![proptest_config(ProptestConfig::with_cases(20))]
+    #![proptest_config(ProptestConfig::with_cases(cases(20)))]
     #[test]
     fn fuzz_valid_register_contract_always_succeeds(
         name_len    in 0usize..=(MAX_NAME_LEN as usize),
@@ -157,7 +167,7 @@ fn is_valid_meta(
 }
 
 proptest! {
-    #![proptest_config(ProptestConfig::with_cases(256))]
+    #![proptest_config(ProptestConfig::with_cases(cases(256)))]
     #[test]
     fn fuzz_register_contract_never_panics_except_invalid_input(
         name_len    in 0usize..=(MAX_NAME_LEN as usize + 20),
@@ -240,7 +250,7 @@ proptest! {
 // contract_id, and assert the guard never allows a stale version to succeed.
 
 proptest! {
-    #![proptest_config(ProptestConfig::with_cases(50))]
+    #![proptest_config(ProptestConfig::with_cases(cases(50)))]
     #[test]
     fn fuzz_concurrent_update_contract_abi_version_guard(
         // Generate a sequence of steps. `0` means "submit the correct next
