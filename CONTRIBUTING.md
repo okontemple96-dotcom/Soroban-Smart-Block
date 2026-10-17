@@ -36,7 +36,10 @@ created) container. Open the Command Palette and run
 **Codespaces: Full Rebuild Container**, or delete the codespace and create a
 new one from the latest `main`. In recovery mode there is no Node/Rust, so
 `npm install` and AI assistants will not work until you rebuild. If a rebuild
-still fails, check **Codespaces: View Creation Log**.
+still fails, check **Codespaces: View Creation Log**. CI builds the dev
+container on every change to `.devcontainer/` (see
+[`.github/workflows/devcontainer.yml`](.github/workflows/devcontainer.yml)),
+so a broken config is caught before it reaches a codespace.
 
 If your fork is behind, click **Sync fork** on GitHub first so the codespace
 picks up the current `.devcontainer/` config.

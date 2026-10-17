@@ -1,0 +1,52 @@
+name: Dev Container Build
+
+# Catches broken .devcontainer/ configs in CI. A bad Dockerfile, compose file
+# or feature reference otherwise only shows up when a contributor opens a
+# codespace and lands in recovery mode.
+
+on:
+  pull_request:
+    paths:
+      - ".devcontainer/**"
+      - ".github/workflows/devcontainer.yml"
+  push:
+    branches: [main]
+    paths:
+      - ".devcontainer/**"
+      - ".github/workflows/devcontainer.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  devcontainer:
+    name: Build dev container
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image, start compose stack, verify tools and setup script
+        uses: devcontainers/ci@v0.3
+        with:
+          configFile: .devcontainer/devcontainer.json
+          runCmd: |
+            set -e
+            node -v
+            npm -v
+            cargo -V
+            rustup target list --installed | grep wasm32
+
+            # post-create.sh exits 0 even when a step fails, so the failure
+            # summary it prints is what decides this step.
+            output=$(bash .devcontainer/post-create.sh 2>&1) || true
+            echo "$output"
+            if echo "$output" | grep -q "Setup finished with failures"; then
+              echo "::error::.devcontainer/post-create.sh reported failed steps"
+              exit 1
+            fi
