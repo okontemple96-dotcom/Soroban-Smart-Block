@@ -19,7 +19,6 @@ export default defineConfig({
           "react-vendor": ["react", "react-dom", "react-router-dom"],
           "query-vendor": ["@tanstack/react-query"],
           "stellar-vendor": ["@stellar/stellar-sdk", "@stellar/freighter-api"],
-          "monaco-vendor": ["monaco-editor", "monaco-editor-workers"],
           "viz-vendor": ["3d-force-graph", "cytoscape", "@xyflow/react"],
           "webcontainer-vendor": ["@webcontainer/api"],
         },
