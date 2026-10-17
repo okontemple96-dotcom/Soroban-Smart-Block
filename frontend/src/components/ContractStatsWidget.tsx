@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../api";
 import type { StatsRange } from "./InvocationFrequencyChart";
-import { useTranslation } from "../i18n";
+import { useTranslation } from "../i18nProvider";
 
 /** Daily event-count sparkline for the selected range — plain SVG, no chart library. */
 function Sparkline({ data, label }: { data: { date: string; count: number }[]; label: string }) {
@@ -24,7 +24,14 @@ function Sparkline({ data, label }: { data: { date: string; count: number }[]; l
       role="img"
       aria-label={label}
     >
-      <polyline points={pts} fill="none" stroke="var(--accent)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+      <polyline
+        points={pts}
+        fill="none"
+        stroke="var(--accent)"
+        strokeWidth={2}
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
       {data.map((d, i) => {
         const x = (i / (data.length - 1 || 1)) * w;
         const y = h - (d.count / maxCount) * h;
@@ -49,13 +56,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-export default function ContractStatsWidget({
-  contractId,
-  range = 30,
-}: {
-  contractId: string;
-  range?: StatsRange;
-}) {
+export default function ContractStatsWidget({ contractId, range = 30 }: { contractId: string; range?: StatsRange }) {
   const { t } = useTranslation();
   const { data, isLoading } = useQuery({
     queryKey: ["contract-stats", contractId, range],
@@ -71,14 +72,24 @@ export default function ContractStatsWidget({
       <div style={{ display: "flex", gap: 32, flexWrap: "wrap" }}>
         <Stat label={t("chart.totalEvents")} value={data.total_events.toLocaleString()} />
         <Stat label={t("chart.uniqueCallers")} value={data.unique_callers.toLocaleString()} />
-        <Stat label={t("chart.lastActivity")} value={data.last_seen_ledger != null ? t("chart.ledger", { ledger: data.last_seen_ledger.toLocaleString() }) : "—"} />
+        <Stat
+          label={t("chart.lastActivity")}
+          value={
+            data.last_seen_ledger != null ? t("chart.ledger", { ledger: data.last_seen_ledger.toLocaleString() }) : "—"
+          }
+        />
       </div>
       <div>
         <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 6 }}>{t("chart.eventsPerDay", { range })}</div>
         <Sparkline data={data.events_per_day} label={t("chart.dailyEventsLabel", { range })} />
         <ul className="sr-only" aria-label={t("chart.dataAlternative")}>
           {data.events_per_day.map((point) => (
-            <li key={point.date}>{t(point.count === 1 ? "chart.dataPointOne" : "chart.dataPointMany", { label: point.date, count: point.count })}</li>
+            <li key={point.date}>
+              {t(point.count === 1 ? "chart.dataPointOne" : "chart.dataPointMany", {
+                label: point.date,
+                count: point.count,
+              })}
+            </li>
           ))}
         </ul>
       </div>

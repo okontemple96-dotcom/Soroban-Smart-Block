@@ -1,12 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import ThemeToggle from "./ThemeToggle";
 import NetworkSwitcher from "./NetworkSwitcher";
 import WalletConnectButton from "./WalletConnectButton";
 import LanguageToggle from "./LanguageToggle";
 import { useRecentSearches } from "../hooks/useRecentSearches";
-import { useTranslation, type Locale } from "../i18n";
+import { useTranslation, type Locale } from "../i18nProvider";
 
 const NAV_LINKS = [
   { to: "/contracts", key: "nav.registry" },
@@ -28,9 +27,12 @@ export default function Nav() {
   const [searchFocused, setSearchFocused] = useState(false);
   const nav = useNavigate();
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const { t } = useTranslation();
-  const { recent, add: addRecentSearch, remove: removeRecentSearch, clearAll: clearRecentSearches } =
-    useRecentSearches();
+  const {
+    recent,
+    add: addRecentSearch,
+    remove: removeRecentSearch,
+    clearAll: clearRecentSearches,
+  } = useRecentSearches();
 
   function goToSearch(query: string, kind?: string) {
     const params = new URLSearchParams({ q: query });
@@ -303,7 +305,13 @@ export default function Nav() {
                     }}
                     title={t("search.remove")}
                     aria-label={t("search.removeRecent", { query: entry.query })}
-                    style={{ background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: 12 }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "var(--muted)",
+                      cursor: "pointer",
+                      fontSize: 12,
+                    }}
                   >
                     ✕
                   </button>
@@ -330,7 +338,6 @@ export default function Nav() {
               </div>
             </div>
           )}
-
         </form>
         <NetworkSwitcher />
         <WalletConnectButton />
