@@ -22,7 +22,7 @@ export default defineConfig({
           "query-vendor": ["@tanstack/react-query"],
           "stellar-vendor": ["@stellar/stellar-sdk", "@stellar/freighter-api"],
           "monaco-vendor": ["monaco-editor", "monaco-editor-workers"],
-          "viz-vendor": ["3d-force-graph", "cytoscape", "react-flow-renderer"],
+          "viz-vendor": ["3d-force-graph", "cytoscape", "@xyflow/react"],
           "webcontainer-vendor": ["@webcontainer/api"],
         },
       },

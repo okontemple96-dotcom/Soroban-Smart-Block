@@ -4,7 +4,8 @@
  */
 
 import React, { useState, useCallback } from "react";
-import ReactFlow, {
+import {
+  ReactFlow,
   addEdge,
   applyEdgeChanges,
   applyNodeChanges,
@@ -18,7 +19,7 @@ import ReactFlow, {
   Node,
   EdgeChange,
   NodeChange,
-} from "react-flow-renderer";
+} from "@xyflow/react";
 import { BatchCall, ExecutionMode } from "../types/batch";
 import { BATCH_TEMPLATES, fillTemplateParameters } from "../services/batchTemplates";
 
@@ -73,13 +74,9 @@ const nodeStyles = {
   },
 };
 
-export default function BatchFlowChart({
-  initialCalls = [],
-  onCallsChange,
-  onSimulate,
-}: BatchFlowChartProps) {
-  const [nodes, setNodes] = useNodesState([]);
-  const [edges, setEdges] = useEdgesState([]);
+export default function BatchFlowChart({ initialCalls = [], onCallsChange, onSimulate }: BatchFlowChartProps) {
+  const [nodes, setNodes] = useNodesState<Node>([]);
+  const [edges, setEdges] = useEdgesState<Edge>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<string>("");
   const [templateValues, setTemplateValues] = useState<Record<string, string>>({});
   const [executionMode, setExecutionMode] = useState<ExecutionMode>("sequential");
@@ -138,7 +135,7 @@ export default function BatchFlowChart({
   const handleApplyTemplate = () => {
     const template = BATCH_TEMPLATES[selectedTemplate];
     if (!template) return;
-    
+
     const filledCalls = fillTemplateParameters(template, templateValues);
     initializeNodes(filledCalls);
     setShowTemplateSelector(false);
@@ -168,7 +165,15 @@ export default function BatchFlowChart({
   };
 
   return (
-    <div style={{ position: "relative", height: 500, border: "1px solid var(--border)", borderRadius: 8, overflow: "hidden" }}>
+    <div
+      style={{
+        position: "relative",
+        height: 500,
+        border: "1px solid var(--border)",
+        borderRadius: 8,
+        overflow: "hidden",
+      }}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
